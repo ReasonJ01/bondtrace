@@ -64,7 +64,7 @@ export function Timeline({
     const visibleCurrentIndex = visibleSteps.findIndex((v) => v.tapeIndex === currentStepIndex);
     const currentDot = dotRefs.current[Math.max(0, visibleCurrentIndex)] ?? firstDot;
 
-    if (!firstDot || !currentDot) return;
+    if (!firstDot || !lastDot || !currentDot) return;
 
     const contentRect = content.getBoundingClientRect();
     const firstRect = firstDot.getBoundingClientRect();

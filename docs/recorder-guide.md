@@ -82,5 +82,3 @@ npm run record -- collection.json -e environment.json -o tape.json
 
 The recorder runs Newman and writes `tape.json`. Upload that file to your Bondtrace player to curate and play the demo.
 
----
-

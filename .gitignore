@@ -29,3 +29,10 @@ Thumbs.db
 
 # Wrangler
 .wrangler/
+.dev.vars
+
+# Test coverage (when added)
+coverage/
+
+# Misc
+.cache/

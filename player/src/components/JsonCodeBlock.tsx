@@ -25,7 +25,7 @@ export function JsonCodeBlock({ content, language = 'json', style }: JsonCodeBlo
   return (
     <div className="json-code-block">
       <Highlight
-        Prism={Prism}
+        prism={Prism}
         theme={themes.oneDark}
         code={displayContent || '(empty)'}
         language={lang}

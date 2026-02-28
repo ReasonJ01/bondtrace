@@ -1,0 +1,316 @@
+{
+  "version": "1.0",
+  "recordedAt": "2026-02-28T19:32:45.112Z",
+  "collectionName": "Test 2",
+  "folderName": "Root",
+  "steps": [
+    {
+      "id": "eda75d4f-5188-40ad-ad49-5c3541af50cf",
+      "index": 0,
+      "name": "OAuth2 token endpoint (client credentials) Copy",
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/oauth/token",
+        "headers": {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json",
+          "Authorization": "Bearer adF-G1rcivTOlQ14uH1eZM4rJ4qOwp_NjnaaUPF_RPQ",
+          "User-Agent": "PostmanRuntime/7.39.1",
+          "Cache-Control": "no-cache",
+          "Postman-Token": "510047a5-5c7c-43d2-8fff-0029e43f83fe",
+          "Host": "127.0.0.1:8000",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Length": "80"
+        },
+        "body": "grant_type=client_credentials&client_id=string&client_secret=string&scope=string"
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sat, 28 Feb 2026 19:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "102",
+          "content-type": "application/json"
+        },
+        "body": {
+          "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+          "token_type": "bearer",
+          "expires_in": 3600
+        }
+      }
+    },
+    {
+      "id": "caffae3b-9a7c-4acd-a3ee-53ce8b6d2b01",
+      "index": 1,
+      "name": "List all customers Copy",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/customers",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+          "User-Agent": "PostmanRuntime/7.39.1",
+          "Cache-Control": "no-cache",
+          "Postman-Token": "3d839b33-1ed1-4ca0-8f78-f266605ad15d",
+          "Host": "127.0.0.1:8000",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sat, 28 Feb 2026 19:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "302",
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "uid": "cust_001",
+            "name": "Acme Corp",
+            "account_type": "business",
+            "balance": 125000.5,
+            "approved": true
+          },
+          {
+            "uid": "cust_002",
+            "name": "Jane Smith",
+            "account_type": "personal",
+            "balance": 8450,
+            "approved": false
+          },
+          {
+            "uid": "cust_003",
+            "name": "TechStart Inc",
+            "account_type": "business",
+            "balance": 32000.75,
+            "approved": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "9242dd8a-0355-45a2-ac70-26e0e892f0a8",
+      "index": 2,
+      "name": "Create a new transaction Copy",
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/customers/cust_001/transactions",
+        "headers": {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+          "User-Agent": "PostmanRuntime/7.39.1",
+          "Cache-Control": "no-cache",
+          "Postman-Token": "ec31d749-64e4-45e0-9f55-4b43d5995b55",
+          "Host": "127.0.0.1:8000",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive",
+          "Content-Length": "91"
+        },
+        "body": "{\n  \"amount\": 1097.10,\n  \"mark\": \"DEBIT\",\n  \"reference\": \"reference\",\n  \"currency\": \"USD\"\n}"
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sat, 28 Feb 2026 19:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "114",
+          "content-type": "application/json"
+        },
+        "body": {
+          "id": "txn_011",
+          "customer_uid": "cust_001",
+          "amount": 1097.1,
+          "currency": "USD",
+          "mark": "DEBIT",
+          "reference": "reference"
+        }
+      }
+    },
+    {
+      "id": "001378b1-1614-4137-bd2c-0198b2294933",
+      "index": 3,
+      "name": "Get transactions for a customer Copy",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/customers/cust_001/transactions",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+          "User-Agent": "PostmanRuntime/7.39.1",
+          "Cache-Control": "no-cache",
+          "Postman-Token": "e231c2e1-4f2d-4c1c-bae2-9eb0f10f59bd",
+          "Host": "127.0.0.1:8000",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sat, 28 Feb 2026 19:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "932",
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "id": "txn_001",
+            "customer_uid": "cust_001",
+            "amount": 5000,
+            "currency": "USD",
+            "mark": "CREDIT",
+            "reference": "Wire transfer"
+          },
+          {
+            "id": "txn_002",
+            "customer_uid": "cust_001",
+            "amount": -1200.5,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "Vendor payment"
+          },
+          {
+            "id": "txn_006",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          },
+          {
+            "id": "txn_007",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          },
+          {
+            "id": "txn_008",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          },
+          {
+            "id": "txn_009",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          },
+          {
+            "id": "txn_010",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          },
+          {
+            "id": "txn_011",
+            "customer_uid": "cust_001",
+            "amount": 1097.1,
+            "currency": "USD",
+            "mark": "DEBIT",
+            "reference": "reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "370b76f8-b293-4c29-ad76-c9cf8221caf4",
+      "index": 4,
+      "name": "Get a customer by UID Copy",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/customers/cust_001",
+        "headers": {
+          "Accept": "application/json",
+          "Authorization": "Bearer mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+          "User-Agent": "PostmanRuntime/7.39.1",
+          "Cache-Control": "no-cache",
+          "Postman-Token": "f41fa59f-9f5c-4272-97e5-4c58e5f5ca6b",
+          "Host": "127.0.0.1:8000",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Connection": "keep-alive"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "date": "Sat, 28 Feb 2026 19:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "98",
+          "content-type": "application/json"
+        },
+        "body": {
+          "uid": "cust_001",
+          "name": "Acme Corp",
+          "account_type": "business",
+          "balance": 125000.5,
+          "approved": true
+        }
+      }
+    }
+  ],
+  "variableExports": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "access_token",
+      "value": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8"
+    },
+    {
+      "key": "transactionId",
+      "value": "txn_011"
+    },
+    {
+      "key": "customerUid",
+      "value": "cust_001"
+    }
+  ],
+  "persistentStateByStep": [
+    {
+      "baseUrl": "http://127.0.0.1:8000",
+      "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+      "transactionId": "",
+      "customerUid": ""
+    },
+    {
+      "baseUrl": "http://127.0.0.1:8000",
+      "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+      "transactionId": "",
+      "customerUid": "cust_001"
+    },
+    {
+      "baseUrl": "http://127.0.0.1:8000",
+      "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+      "transactionId": "txn_011",
+      "customerUid": "cust_001"
+    },
+    {
+      "baseUrl": "http://127.0.0.1:8000",
+      "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+      "transactionId": "txn_011",
+      "customerUid": "cust_001"
+    },
+    {
+      "baseUrl": "http://127.0.0.1:8000",
+      "access_token": "mO65OV2hUF9rP6krLHsFbsmcS75Mxbjryh-7oD9WFW8",
+      "transactionId": "txn_011",
+      "customerUid": "cust_001"
+    }
+  ]
+}

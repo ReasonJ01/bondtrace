@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tape",
+  "description": "Immutable full capture of a Newman/Postman run",
+  "type": "object",
+  "required": ["version", "recordedAt", "collectionName", "folderName", "steps"],
+  "properties": {
+    "version": { "type": "string" },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "collectionName": { "type": "string" },
+    "folderName": { "type": "string" },
+    "variableExports": {
+      "type": "array",
+      "description": "Environment variables set during the run",
+      "items": {
+        "type": "object",
+        "required": ["key", "value"],
+        "properties": {
+          "key": { "type": "string" },
+          "value": {}
+        }
+      }
+    },
+    "persistentStateByStep": {
+      "type": "array",
+      "description": "Persistent state after each step, from __BONDTRACE_ENV__ logs when collection logs env before each request",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "index", "name", "request", "response"],
+        "properties": {
+          "id": { "type": "string" },
+          "index": { "type": "number" },
+          "name": { "type": "string" },
+          "request": {
+            "type": "object",
+            "required": ["method", "url", "headers", "body"],
+            "properties": {
+              "method": { "type": "string" },
+              "url": { "type": "string" },
+              "headers": { "type": "object", "additionalProperties": { "type": "string" } },
+              "body": { "type": ["string", "null"] }
+            }
+          },
+          "response": {
+            "type": "object",
+            "required": ["statusCode", "headers", "body"],
+            "properties": {
+              "statusCode": { "type": "number" },
+              "headers": { "type": "object", "additionalProperties": { "type": "string" } },
+              "body": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

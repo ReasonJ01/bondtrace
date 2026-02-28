@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "tapePath": "",
+  "steps": [
+    {
+      "stepId": "eda75d4f-5188-40ad-ad49-5c3541af50cf",
+      "visible": false,
+      "title": "OAuth2 token endpoint (client credentials) Copy"
+    },
+    {
+      "stepId": "caffae3b-9a7c-4acd-a3ee-53ce8b6d2b01",
+      "visible": true,
+      "title": "List all customers"
+    },
+    {
+      "stepId": "9242dd8a-0355-45a2-ac70-26e0e892f0a8",
+      "visible": true,
+      "title": "Create a new transaction Copy"
+    },
+    {
+      "stepId": "001378b1-1614-4137-bd2c-0198b2294933",
+      "visible": true,
+      "title": "Get transactions for a customer"
+    },
+    {
+      "stepId": "370b76f8-b293-4c29-ad76-c9cf8221caf4",
+      "visible": true,
+      "title": "Get a customer by UID"
+    }
+  ],
+  "persistentFields": [
+    {
+      "key": "baseUrl",
+      "jsonPath": "$.baseUrl"
+    },
+    {
+      "key": "access_token",
+      "jsonPath": "$.access_token"
+    },
+    {
+      "key": "transactionId",
+      "jsonPath": "$.transactionId"
+    },
+    {
+      "key": "customerUid",
+      "jsonPath": "$.customerUid"
+    }
+  ],
+  "templates": {
+    "caffae3b-9a7c-4acd-a3ee-53ce8b6d2b01": "And we'll save the id of the first customer, {{response.body.0.uid}}",
+    "9242dd8a-0355-45a2-ac70-26e0e892f0a8": "Now we have a new transaction for {{response.body.amount}}, and we'll save the transaction id for later {{response.body.id}}",
+    "001378b1-1614-4137-bd2c-0198b2294933": "And there's {{state.transactionId}}",
+    "370b76f8-b293-4c29-ad76-c9cf8221caf4": "And we see that it has"
+  },
+  "templatesPre": {
+    "caffae3b-9a7c-4acd-a3ee-53ce8b6d2b01": "First we're gonna list the customers just to grab an Id",
+    "9242dd8a-0355-45a2-ac70-26e0e892f0a8": "Then we'll create a new transaction for them",
+    "001378b1-1614-4137-bd2c-0198b2294933": "Now we should see that they have the new transaction",
+    "370b76f8-b293-4c29-ad76-c9cf8221caf4": "Lets check their balance has increased too"
+  },
+  "excludedPersistentKeys": [
+    "access_token",
+    "baseUrl"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "bondtrace",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "recorder",
+    "player"
+  ],
+  "scripts": {
+    "record": "node recorder/dist/index.js",
+    "play": "cd player && npm run dev",
+    "build": "npm run build:recorder && npm run build:player",
+    "build:recorder": "cd recorder && npm run build",
+    "build:player": "cd player && npm run build",
+    "deploy": "npm run build && npx wrangler pages deploy player/dist --project-name=bondtrace"
+  }
+}

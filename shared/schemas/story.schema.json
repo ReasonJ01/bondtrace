@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Story",
+  "description": "Curation config for tape playback",
+  "type": "object",
+  "required": ["version", "tapePath", "steps", "persistentFields", "templates"],
+  "properties": {
+    "version": { "type": "string" },
+    "tapePath": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stepId", "visible", "title"],
+        "properties": {
+          "stepId": { "type": "string" },
+          "visible": { "type": "boolean" },
+          "title": { "type": "string" },
+          "subtitle": { "type": "string" }
+        }
+      }
+    },
+    "persistentFields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "jsonPath"],
+        "properties": {
+          "key": { "type": "string" },
+          "jsonPath": { "type": "string" }
+        }
+      }
+    },
+    "templates": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "templatesPre": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Pre-request narrative templates per step"
+    },
+    "excludedPersistentKeys": {
+      "type": "array",
+      "description": "Variable keys to hide from Persistent State panel",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,225 @@
+:root {
+  /* Vercel-like monochrome palette */
+  /* Demo-friendly font scale (larger for presentations) */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 15px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --bg-primary: #000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #111;
+  --bg-elevated: #171717;
+  --border: #262626;
+  --border-subtle: #1a1a1a;
+  --text-primary: #fff;
+  --text-secondary: #a1a1a1;
+  --text-muted: #666;
+  --accent: #fff;
+  --accent-muted: #737373;
+  /* Timeline: active=blue, completed=light, future=dark */
+  --timeline-active: #3b82f6;
+  --timeline-completed: #fff;
+  --timeline-completed-text: #c4c4c4;
+  --timeline-future: #2d2d2d;
+  --timeline-future-text: #525252;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+body {
+  margin: 0;
+  font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'SF Mono', Monaco, Consolas, monospace;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Animations for step transitions */
+.step-detail-content {
+  animation: stepFadeIn 0.2s ease-out;
+}
+
+@keyframes stepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Micro-animations for content appearance */
+.animate-fade-in {
+  animation: contentFadeIn 0.3s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: contentFadeInUp 0.35s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: contentScaleIn 0.25s ease-out forwards;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* State panel value change highlight (green flash) */
+.state-value-updated {
+  animation: valuePulseGreen 0.4s ease-out;
+}
+
+@keyframes valuePulseGreen {
+  0% {
+    background-color: rgba(34, 197, 94, 0.2);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* Timeline step transitions */
+.timeline-step-button {
+  transition: background-color 0.3s ease-out, color 0.3s ease-out, font-weight 0.3s ease-out;
+}
+.timeline-dot {
+  transition: background-color 0.3s ease-out, border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+/* Timeline active dot – slightly larger with pulsing halo */
+.timeline-dot-active {
+  width: 10px !important;
+  height: 10px !important;
+  animation: timelineDotPulse 2s ease-in-out infinite;
+}
+
+@keyframes timelineDotPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--timeline-active-dot, #3b82f6) 25%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--timeline-active-dot, #3b82f6) 40%, transparent);
+  }
+}
+
+/* URL bar – pre phase "sending" animation (2 pulses of 600ms in 1.2s)
+   Uses pseudo-element + opacity only to avoid layout shift */
+.url-bar-sending {
+  position: relative;
+}
+.url-bar-sending::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 7px;
+  border: 1px solid var(--url-bar-sending-color, #3b82f6);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--url-bar-sending-color, #3b82f6) 25%, transparent);
+  pointer-events: none;
+  animation: urlBarPulseGlow 0.6s ease-in-out 2;
+  will-change: opacity;
+}
+@keyframes urlBarPulseGlow {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+.sending-dots {
+  animation: sendingDotsPulse 0.6s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes sendingDotsPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes urlBarSendingFade {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* JSON code block – enhanced syntax highlighting (oneDark-inspired) */
+.json-code-block .token.property {
+  color: #9cdcfe !important;
+}
+.json-code-block .token.string {
+  color: #ce9178 !important;
+}
+.json-code-block .token.number {
+  color: #b5cea8 !important;
+}
+.json-code-block .token.boolean,
+.json-code-block .token.null {
+  color: #569cd6 !important;
+}
+.json-code-block .token.punctuation,
+.json-code-block .token.operator {
+  color: #d4d4d4 !important;
+}
+
+/* Global scrollbar theme */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

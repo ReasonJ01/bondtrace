@@ -3,6 +3,9 @@
 A local-first tool that records Postman collection runs via Newman and turns them into curated, sequential demo playback.
 
 ## Quick Start
+https://bondtrace.reason.place/
+
+Test it out with the sample files in /samples
 
 ### One-time setup
 

@@ -18,6 +18,12 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
 # Vite
 *.local
 

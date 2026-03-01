@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type { Tape } from '../types/tape';
 import type { Story } from '../types/story';
+import { useTheme } from '../context/ThemeContext';
 
 function getVerbColor(method: string): string {
   const m = method.toUpperCase();
@@ -24,6 +25,7 @@ interface PlayerLayoutProps {
 }
 
 export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayoutProps) {
+  const { theme, setTheme } = useTheme();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [phase, setPhase] = useState<'pre' | 'post'>('pre');
   const [isSending, setIsSending] = useState(false);
@@ -223,6 +225,29 @@ export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayo
                   zIndex: 100,
                 }}
               >
+                <button
+                  onClick={() => {
+                    setTheme(theme === 'dark' ? 'light' : 'dark');
+                    setShowHeaderMenu(false);
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '8px 12px',
+                    fontSize: 'var(--font-size-sm)',
+                    fontFamily: 'inherit',
+                    cursor: 'pointer',
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    border: 'none',
+                    borderRadius: 4,
+                    textAlign: 'left',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-tertiary)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  {theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode'}
+                </button>
                 <button
                   onClick={() => {
                     const blob = new Blob([JSON.stringify(story, null, 2)], {

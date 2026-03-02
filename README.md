@@ -24,7 +24,7 @@ From the repo root:
 npm run record -- path/to/collection.json -e path/to/environment.json -o tape.json
 ```
 
-With a specific folder:
+Record a specific folder in the collection:
 
 ```bash
 npm run record -- collection.json -e env.json -f "Demo Flow" -o tape.json

@@ -48,7 +48,6 @@ node recorder/dist/index.js --help
 
 - [Recorder Guide](docs/recorder-guide.md) - Recording setup, Postman environment tips
 - [Player Guide](docs/player-guide.md) - Running the player locally, loading tapes and stories
-- [Deployment Guide](docs/deployment.md) - Hosting the player on Cloudflare Pages (e.g. bondtrace.mydomain.com)
 
 ## Project Structure
 

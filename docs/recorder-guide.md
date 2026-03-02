@@ -63,7 +63,9 @@ if (token) {
 
 If the collection runs successfully in Postman, it should work with Bondtrace.
 
----
+#### Export the collection and environment
+
+Export both the collection and environment as JSON. In postman, on the left select Collections/Environments -> hover over the one you want to use -> click the three dots -> Export
 
 ### Step 2: Run the recorder
 

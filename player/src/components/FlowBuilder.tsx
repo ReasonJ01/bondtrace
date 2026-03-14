@@ -23,8 +23,7 @@ function makeVariableSet(key = '', expression = ''): FlowVariableSet {
   return { id: crypto.randomUUID(), key, expression };
 }
 
-function makeRequestStep(operation: OpenApiOperation, specConfig: SpecConfig, servers: string[]): RequestFlowStep {
-  const baseUrl = servers[0] ?? '';
+function makeRequestStep(operation: OpenApiOperation, specConfig: SpecConfig, _servers: string[]): RequestFlowStep {
   let url = operation.defaultUrl;
   if (specConfig.baseUrlVar) {
     let pathPart: string;

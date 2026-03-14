@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "kind": "bondtrace-flow",
+  "name": "sample-customer-flow",
+  "environments": {
+    "local": {
+      "baseUrlVar": "BASE_URL",
+      "auth": {
+        "serviceToken": "clientCreds",
+        "userToken": "browserUserPkce"
+      }
+    },
+    "dev": {
+      "baseUrlVar": "BASE_URL",
+      "auth": {
+        "serviceToken": "clientCreds",
+        "userToken": "browserUserImplicit"
+      }
+    },
+    "sandbox": {
+      "baseUrlVar": "BASE_URL",
+      "auth": {
+        "serviceToken": "clientCreds",
+        "userToken": "browserUserPkce"
+      }
+    }
+  },
+  "authProfiles": {
+    "clientCreds": {
+      "type": "oauth2-client-credentials",
+      "tokenUrlVar": "OAUTH_TOKEN_URL",
+      "clientIdVar": "CLIENT_ID",
+      "clientSecretVar": "CLIENT_SECRET",
+      "scopes": [
+        "api.read",
+        "api.write"
+      ]
+    },
+    "browserUserImplicit": {
+      "type": "oauth2-browser-redirect",
+      "mode": "implicit",
+      "authorizeUrlVar": "AUTHORIZE_URL",
+      "clientIdVar": "BROWSER_CLIENT_ID",
+      "redirectUriVar": "REDIRECT_URI",
+      "scopes": [
+        "openid",
+        "profile"
+      ],
+      "tokenResponsePath": "$.access_token"
+    },
+    "browserUserPkce": {
+      "type": "oauth2-browser-redirect",
+      "authorizeUrlVar": "AUTHORIZE_URL",
+      "tokenUrlVar": "TOKEN_URL",
+      "clientIdVar": "BROWSER_CLIENT_ID",
+      "redirectUriVar": "REDIRECT_URI",
+      "scopes": [
+        "openid",
+        "profile"
+      ],
+      "tokenResponsePath": "$.access_token",
+      "mode": "authorization-code-pkce"
+    }
+  },
+  "variables": [
+    {
+      "name": "traceId",
+      "value": "{{fn.uuid()}}"
+    }
+  ],
+  "redaction": {
+    "auto": true,
+    "keys": [
+      "clientSecret",
+      "password"
+    ],
+    "tokenFields": true
+  },
+  "flow": [
+    {
+      "id": "createCustomer",
+      "auth": "serviceToken",
+      "pre": {
+        "set": {
+          "email": "{{fn.email('bondtrace.dev')}}"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/customers",
+        "body": {
+          "email": "{{vars.email}}"
+        }
+      },
+      "post": {
+        "set": {
+          "customerId": "{{response.body.id}}"
+        }
+      }
+    },
+    {
+      "type": "wait",
+      "seconds": 5,
+      "label": "Wait for async customer provisioning"
+    },
+    {
+      "type": "waitForContinue",
+      "label": "Pause recording until presenter is ready",
+      "buttonText": "Continue recording"
+    },
+    {
+      "id": "getCustomerAsUser",
+      "auth": "userToken",
+      "request": {
+        "method": "GET",
+        "path": "/customers/{{vars.customerId}}"
+      }
+    }
+  ]
+}

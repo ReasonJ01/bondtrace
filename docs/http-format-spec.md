@@ -156,8 +156,13 @@ Supported directives in v1:
 ```
 
 - Request-step only
-- Selects token variable to inject/expect (`service_token` or `user_token` in v1)
+- Selects token variable to inject/expect (`client_token` or `ops_token` in v1)
+- Supported token vars:
+  - `client_token` – client credentials (machine-to-machine)
+  - `ops_token` – implicit flow (browser-based)
 - Runtime behavior:
+  - If token already set in `.env`, use it
+  - Else recorder fetches it before running (client credentials or implicit flow)
   - If request already has `Authorization` header, use authored header as-is
   - Else inject `Authorization: Bearer {{<token_var>}}`
 
@@ -220,7 +225,7 @@ Sources for `{{...}}`:
 
 - `{{base_url}}` and other env-provided variables
 - `{{vars.<name>}}` runtime variable store
-- direct aliases like `{{service_token}}`, `{{user_token}}`
+- direct aliases like `{{client_token}}`, `{{ops_token}}`
 
 ---
 
@@ -242,14 +247,12 @@ Semantics:
 
 ## 9. Auth and token expectations
 
-The `.http` format itself does not define token acquisition.
+The `.http` format uses two token variables:
 
-Token acquisition is configured externally (runtime + `.env`) and provides:
+- **`client_token`** – client credentials (machine-to-machine). Requires `OAUTH_TOKEN_URL`, `CLIENT_ID`, `CLIENT_SECRET` in `.env`. If already set in `.env`, recorder skips fetching.
+- **`ops_token`** – implicit flow (browser-based). Requires `AUTHORIZE_URL`, `BROWSER_CLIENT_ID`, `REDIRECT_URI` in `.env`. If already set in `.env`, recorder skips fetching.
 
-- `service_token`
-- `user_token`
-
-`@auth` chooses which token a request expects.
+`@auth` chooses which token a request expects. The recorder fetches tokens up front only for auth vars used in the flow, and only if not already present in `.env`.
 
 If `@auth` is omitted, request runs without implicit auth injection unless `Authorization` header is authored explicitly.
 
@@ -324,9 +327,11 @@ This keeps `.http` execution fully compatible with existing player behavior and 
 
 ## 13. User-facing doc excerpt (quick guide)
 
+### Example `.http` flow
+
 ```http
 @name createCustomer
-@auth service_token
+@auth client_token
 @set customer_id={{response.body.id}}
 POST {{base_url}}/v1.1/customers
 Content-Type: application/json
@@ -343,14 +348,40 @@ Content-Type: application/json
 
 ###
 @name getCustomer
-@auth user_token
+@auth ops_token
 GET {{base_url}}/v1.1/customers/{{vars.customer_id}}
 ```
 
-Run:
+### Example `.env` (for recorder)
+
+```dotenv
+BASE_URL=https://api.example.com
+
+# Client credentials (client_token)
+OAUTH_TOKEN_URL=https://auth.example.com/oauth/token
+CLIENT_ID=...
+CLIENT_SECRET=...
+
+# Implicit flow (ops_token)
+AUTHORIZE_URL=https://auth.example.com/authorize
+BROWSER_CLIENT_ID=...
+REDIRECT_URI=http://localhost:7777/callback
+```
+
+If `client_token` or `ops_token` are already set in `.env`, the recorder skips fetching.
+
+### Run
+
+From the repo root (run the recorder directly to avoid npm consuming `--env-file` and `-o`):
 
 ```bash
-bondtrace run requests/ --env-file .env.dev --out tape.json
+node recorder/dist/index.js requests/create-customer.http --env-file .env.dev -o tape.json
+```
+
+Or, if `bondtrace-record` is on your PATH:
+
+```bash
+bondtrace-record requests/create-customer.http --env-file .env.dev -o tape.json
 ```
 
 ---

@@ -1,36 +1,36 @@
 #!/usr/bin/env node
 /**
- * Bondtrace Recorder CLI - runs Postman collection via Newman and produces tape.json
- *
- * Usage:
- *   bondtrace-record collection.json [-e environment.json] [-f folder] [-o tape.json]
+ * Bondtrace Recorder CLI - runs Postman collections or .http flows and produces tape.json
  */
 
 import newman, { NewmanRunOptions } from 'newman';
-import { resolve, dirname } from 'path';
+import { resolve, dirname, extname } from 'path';
 import { readFileSync, existsSync, mkdirSync } from 'fs';
 import { createTapeReporter } from './reporter.js';
+import { executeHttpFlow } from './http-flow.js';
 
 const HELP = `
-Bondtrace Recorder - Records Postman collection runs to tape.json
+Bondtrace Recorder - Records Postman collections or .http flows to tape.json
 
 Usage:
-  bondtrace-record <collection.json> [options]
+  bondtrace-record <collection.json | request.http> [options]
 
 Options:
-  -e, --environment <path>  Environment file (optional)
-  -f, --folder <name>       Run specific folder only (optional)
+  -e, --environment <path>  Postman environment JSON file (optional)
+  --env-file <path>         .env file for .http flow execution (optional)
+  -f, --folder <name>       Run specific Postman folder only (optional)
   -o, --output <path>       Output tape file (default: tape.json)
   -h, --help                Show this help
 
 Examples:
   bondtrace-record my-api.json -e env.json -o tape.json
-  bondtrace-record my-api.json -e env.json -f "Demo Flow" -o tape.json
+  bondtrace-record requests/create-customer.http --env-file .env.dev -o tape.json
 `;
 
 const args = process.argv.slice(2);
-let collectionPath = '';
+let inputPath = '';
 let envPath = '';
+let envFilePath = '';
 let folder = '';
 let outputPath = 'tape.json';
 
@@ -40,39 +40,100 @@ for (let i = 0; i < args.length; i++) {
     process.exit(0);
   } else if (args[i] === '-e' || args[i] === '--environment') {
     envPath = args[++i] ?? '';
+  } else if (args[i] === '--env-file') {
+    envFilePath = args[++i] ?? '';
   } else if (args[i] === '-f' || args[i] === '--folder') {
     folder = args[++i] ?? '';
   } else if (args[i] === '-o' || args[i] === '--output') {
     outputPath = args[++i] ?? 'tape.json';
   } else if (!args[i].startsWith('-')) {
-    collectionPath = args[i];
+    inputPath = args[i];
   }
 }
 
-if (!collectionPath) {
+if (!inputPath) {
   console.error(HELP.trim());
   process.exit(1);
 }
 
-const collectionResolved = resolve(process.cwd(), collectionPath);
+const inputResolved = resolve(process.cwd(), inputPath);
 const envResolved = envPath ? resolve(process.cwd(), envPath) : undefined;
 const outputResolved = resolve(process.cwd(), outputPath);
-const workingDir = resolve(collectionResolved, '..');
 
-// Early validation
-if (!existsSync(collectionResolved)) {
-  console.error(`Error: Collection file not found: ${collectionPath}`);
+if (!existsSync(inputResolved)) {
+  console.error(`Error: Input not found: ${inputPath}`);
   process.exit(1);
+}
+
+try {
+  mkdirSync(dirname(outputResolved), { recursive: true });
+} catch (err) {
+  console.error(`Error: Cannot create output directory for ${outputPath}`, err instanceof Error ? err.message : err);
+  process.exit(1);
+}
+
+const isHttpFlow = extname(inputResolved).toLowerCase() === '.http';
+
+if (isHttpFlow) {
+  try {
+    const result = await executeHttpFlow(inputPath, outputPath, envFilePath || undefined);
+
+    if (result.unsetVars.length > 0) {
+      console.warn('\nUnset variables (add to .env or ensure they are set):');
+      for (const v of result.unsetVars) {
+        console.warn(`  - {{${v}}}`);
+      }
+    }
+
+    for (const warning of result.warnings) {
+      if (!warning.startsWith('Unresolved interpolation token:')) {
+        console.warn(`Warning: ${warning}`);
+      }
+    }
+
+    if (result.stepCount > 0) {
+      if (result.failedStepDetails.length > 0) {
+        console.log('\n--- Failed requests ---');
+        for (const f of result.failedStepDetails) {
+          console.log(`\n${f.method} ${f.name}: ${f.status}`);
+          console.log(`  URL: ${f.url}`);
+          if (f.requestBody) {
+            console.log(`  Request body: ${f.requestBody}`);
+          }
+          console.log(`  Response: ${f.responseBody}`);
+        }
+      }
+
+      console.log('\nSummary:');
+      for (const step of result.stepResults) {
+        const icon = step.ok ? '\u2713' : '\u2717';
+        console.log(`  ${step.method} ${step.name}: ${step.status} ${icon}`);
+      }
+      const okCount = result.stepResults.filter((s) => s.ok).length;
+      const failCount = result.stepResults.length - okCount;
+      if (failCount > 0) {
+        console.log(`\n${okCount} succeeded, ${failCount} failed.`);
+      }
+      console.log(`\nTape written to ${result.tapePath} (${result.stepCount} steps). Upload to your Bondtrace player.`);
+      process.exit(0);
+    }
+
+    console.error('\nNo request steps recorded. Check your .http flow and try again.');
+    process.exit(1);
+  } catch (err) {
+    console.error(`Error: Failed to execute .http flow: ${err instanceof Error ? err.message : err}`);
+    process.exit(1);
+  }
 }
 
 let collectionJson: { info?: { name?: string }; item?: unknown };
 try {
-  collectionJson = JSON.parse(readFileSync(collectionResolved, 'utf-8'));
-  if (!collectionJson || (typeof collectionJson !== 'object')) {
+  collectionJson = JSON.parse(readFileSync(inputResolved, 'utf-8'));
+  if (!collectionJson || typeof collectionJson !== 'object') {
     throw new Error('Invalid structure');
   }
 } catch (err) {
-  console.error(`Error: Invalid collection JSON: ${collectionPath}`, err instanceof Error ? err.message : err);
+  console.error(`Error: Invalid collection JSON: ${inputPath}`, err instanceof Error ? err.message : err);
   process.exit(1);
 }
 
@@ -93,22 +154,14 @@ if (envResolved) {
   }
 }
 
-// Ensure output directory exists
-try {
-  mkdirSync(dirname(outputResolved), { recursive: true });
-} catch (err) {
-  console.error(`Error: Cannot create output directory for ${outputPath}`, err instanceof Error ? err.message : err);
-  process.exit(1);
-}
-
 const reporter = createTapeReporter({ export: outputPath });
 reporter.init({ name: collectionName }, { name: folder || 'Root' });
 
 const runOptions: NewmanRunOptions = {
-  collection: collectionResolved,
+  collection: inputResolved,
   reporters: ['cli'],
   reporter: { cli: { silent: false } },
-  workingDir,
+  workingDir: resolve(inputResolved, '..'),
 };
 
 if (environmentObj) {

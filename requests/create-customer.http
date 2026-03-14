@@ -1,0 +1,38 @@
+@name createCustomer
+@auth service_token
+POST {{base_url}}/v1.1/customers
+Content-Type: application/json
+Authorization: Bearer {{service_token}}
+
+{
+  "accountHolderType": "INDIVIDUAL",
+  "externalRef": "{{$random_string}}",
+  "person": {
+    "firstName": "Timmy",
+    "lastName": "Tester {{$random_int}}",
+    "dateOfBirth": "1962-12-26",
+    "address": {
+      "addressLine1": "241 Ocean View",
+      "addressLine4": "London",
+      "postCode": "WT1 1TD",
+      "country": "UK"
+    },
+    "ukAccountDetail": {
+      "sortCode": "400619",
+      "accountNumber": "51675192"
+    },
+    "customerTaxResidency": [
+      {
+        "taxCountry": "GBR"
+      }
+    ]
+  }
+}
+
+###
+@name waitForProvisioning
+@wait 5
+
+###
+@name pauseForDemo
+@wait_for_continue Continue when customer is visible in back office

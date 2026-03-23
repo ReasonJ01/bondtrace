@@ -25,7 +25,7 @@ interface PlayerLayoutProps {
   onReset: () => void;
 }
 
-export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayoutProps) {
+export function PlayerLayout({ tape, story, onStoryChange, onStoryLoad, onReset }: PlayerLayoutProps) {
   const { theme, setTheme } = useTheme();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [phase, setPhase] = useState<'pre' | 'post'>('pre');

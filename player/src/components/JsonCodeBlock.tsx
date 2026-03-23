@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Highlight, themes } from 'prism-react-renderer';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-json';

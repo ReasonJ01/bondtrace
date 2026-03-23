@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Highlight, themes } from 'prism-react-renderer';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-json';
@@ -6,7 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 interface JsonCodeBlockProps {
   content: string;
   language?: 'json' | 'plain';
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 function tryPrettyJson(raw: string): string {

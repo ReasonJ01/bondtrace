@@ -1,0 +1,232 @@
+{
+  "version": "1.0",
+  "recordedAt": "2026-03-14T14:24:58.885Z",
+  "collectionName": "samples\\recorder",
+  "folderName": "Root",
+  "steps": [
+    {
+      "id": "get_customers",
+      "index": 0,
+      "name": "get_customers",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/customers",
+        "headers": {
+          "Authorization": "Bearer wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "content-length": "302",
+          "content-type": "application/json",
+          "date": "Sat, 14 Mar 2026 14:24:58 GMT",
+          "server": "uvicorn"
+        },
+        "body": [
+          {
+            "uid": "cust_001",
+            "name": "Acme Corp",
+            "account_type": "business",
+            "balance": 125000.5,
+            "approved": true
+          },
+          {
+            "uid": "cust_002",
+            "name": "Jane Smith",
+            "account_type": "personal",
+            "balance": 8450,
+            "approved": false
+          },
+          {
+            "uid": "cust_003",
+            "name": "TechStart Inc",
+            "account_type": "business",
+            "balance": 32000.75,
+            "approved": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "create_customer",
+      "index": 1,
+      "name": "create_customer",
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/customers",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs"
+        },
+        "body": "{\n  \"name\": \"tdji3f8tj4rs\",\n  \"account_type\": \"personal\",\n  \"balance\": 0\n}"
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "content-length": "97",
+          "content-type": "application/json",
+          "date": "Sat, 14 Mar 2026 14:24:58 GMT",
+          "server": "uvicorn"
+        },
+        "body": {
+          "uid": "cust_004",
+          "name": "tdji3f8tj4rs",
+          "account_type": "personal",
+          "balance": 0,
+          "approved": false
+        }
+      }
+    },
+    {
+      "id": "get_customer",
+      "index": 2,
+      "name": "get_customer",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/customers/cust_004",
+        "headers": {
+          "Authorization": "Bearer wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "content-length": "97",
+          "content-type": "application/json",
+          "date": "Sat, 14 Mar 2026 14:24:58 GMT",
+          "server": "uvicorn"
+        },
+        "body": {
+          "uid": "cust_004",
+          "name": "tdji3f8tj4rs",
+          "account_type": "personal",
+          "balance": 0,
+          "approved": false
+        }
+      }
+    },
+    {
+      "id": "approve_customer",
+      "index": 3,
+      "name": "approve_customer",
+      "request": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/ops/cust_004/approve",
+        "headers": {
+          "Authorization": "Bearer L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk"
+        },
+        "body": null
+      },
+      "response": {
+        "statusCode": 200,
+        "headers": {
+          "content-length": "96",
+          "content-type": "application/json",
+          "date": "Sat, 14 Mar 2026 14:24:58 GMT",
+          "server": "uvicorn"
+        },
+        "body": {
+          "uid": "cust_004",
+          "name": "tdji3f8tj4rs",
+          "account_type": "personal",
+          "balance": 0,
+          "approved": true
+        }
+      }
+    }
+  ],
+  "variableExports": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "OAUTH_TOKEN_URL",
+      "value": "http://127.0.0.1:8000/oauth/token"
+    },
+    {
+      "key": "CLIENT_ID",
+      "value": "your_client_id"
+    },
+    {
+      "key": "CLIENT_SECRET",
+      "value": "your_client_secret"
+    },
+    {
+      "key": "AUTHORIZE_URL",
+      "value": "http://127.0.0.1:8000/authorize"
+    },
+    {
+      "key": "BROWSER_CLIENT_ID",
+      "value": "your_browser_client_id"
+    },
+    {
+      "key": "REDIRECT_URI",
+      "value": "http://localhost:7777/callback"
+    },
+    {
+      "key": "client_token",
+      "value": "wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs"
+    },
+    {
+      "key": "ops_token",
+      "value": "L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk"
+    },
+    {
+      "key": "customerUid",
+      "value": "cust_004"
+    }
+  ],
+  "persistentStateByStep": [
+    {
+      "base_url": "http://127.0.0.1:8000",
+      "OAUTH_TOKEN_URL": "http://127.0.0.1:8000/oauth/token",
+      "CLIENT_ID": "your_client_id",
+      "CLIENT_SECRET": "your_client_secret",
+      "AUTHORIZE_URL": "http://127.0.0.1:8000/authorize",
+      "BROWSER_CLIENT_ID": "your_browser_client_id",
+      "REDIRECT_URI": "http://localhost:7777/callback",
+      "client_token": "wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs",
+      "ops_token": "L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk"
+    },
+    {
+      "base_url": "http://127.0.0.1:8000",
+      "OAUTH_TOKEN_URL": "http://127.0.0.1:8000/oauth/token",
+      "CLIENT_ID": "your_client_id",
+      "CLIENT_SECRET": "your_client_secret",
+      "AUTHORIZE_URL": "http://127.0.0.1:8000/authorize",
+      "BROWSER_CLIENT_ID": "your_browser_client_id",
+      "REDIRECT_URI": "http://localhost:7777/callback",
+      "client_token": "wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs",
+      "ops_token": "L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk",
+      "customerUid": "cust_004"
+    },
+    {
+      "base_url": "http://127.0.0.1:8000",
+      "OAUTH_TOKEN_URL": "http://127.0.0.1:8000/oauth/token",
+      "CLIENT_ID": "your_client_id",
+      "CLIENT_SECRET": "your_client_secret",
+      "AUTHORIZE_URL": "http://127.0.0.1:8000/authorize",
+      "BROWSER_CLIENT_ID": "your_browser_client_id",
+      "REDIRECT_URI": "http://localhost:7777/callback",
+      "client_token": "wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs",
+      "ops_token": "L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk",
+      "customerUid": "cust_004"
+    },
+    {
+      "base_url": "http://127.0.0.1:8000",
+      "OAUTH_TOKEN_URL": "http://127.0.0.1:8000/oauth/token",
+      "CLIENT_ID": "your_client_id",
+      "CLIENT_SECRET": "your_client_secret",
+      "AUTHORIZE_URL": "http://127.0.0.1:8000/authorize",
+      "BROWSER_CLIENT_ID": "your_browser_client_id",
+      "REDIRECT_URI": "http://localhost:7777/callback",
+      "client_token": "wHoiU2X6IYmPZiUndeY5OGczIIGvqoL-I2qJC76zxMs",
+      "ops_token": "L27K6r1xGtEP23KcOTUCqFN-bNuvclRuzeLCamnKdpk",
+      "customerUid": "cust_004"
+    }
+  ]
+}

@@ -21,10 +21,11 @@ interface PlayerLayoutProps {
   tape: Tape;
   story: Story;
   onStoryChange: (story: Story) => void;
+  onStoryLoad: (story: Story) => void;
   onReset: () => void;
 }
 
-export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayoutProps) {
+export function PlayerLayout({ tape, story, onStoryChange, onStoryLoad, onReset }: PlayerLayoutProps) {
   const { theme, setTheme } = useTheme();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [phase, setPhase] = useState<'pre' | 'post'>('pre');
@@ -33,6 +34,7 @@ export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayo
   const [showHeaderMenu, setShowHeaderMenu] = useState(false);
   const [showRawBody, setShowRawBody] = useState(false);
   const headerMenuRef = useRef<HTMLDivElement>(null);
+  const storyInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -160,6 +162,30 @@ export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayo
     });
   };
 
+  const handleStoryFile = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const json = JSON.parse(reader.result as string);
+          if (json?.steps && Array.isArray(json.steps)) {
+            onStoryLoad(json as Story);
+            setShowHeaderMenu(false);
+          } else {
+            alert('Invalid story file: missing steps array');
+          }
+        } catch {
+          alert('Invalid JSON file');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    },
+    [onStoryLoad]
+  );
+
   return (
     <div
       style={{
@@ -193,6 +219,13 @@ export function PlayerLayout({ tape, story, onStoryChange, onReset }: PlayerLayo
             {tape.collectionName}
           </span>
           <div ref={headerMenuRef} style={{ position: 'relative', flexShrink: 0 }}>
+            <input
+              ref={storyInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleStoryFile}
+              style={{ display: 'none' }}
+            />
             <button
               onClick={() => setShowHeaderMenu(!showHeaderMenu)}
               title="Actions"

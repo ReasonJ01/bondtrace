@@ -4,7 +4,7 @@
 
 Bondtrace turns a Postman collection run into a demo-ready playback. The workflow:
 
-1. **Record** – Run your collection through Newman; Bondtrace captures every request and response into a `tape.json` file.
+1. **Record** – Run your collection through Newman (Postman CLI); Bondtrace captures every request and response into a `tape.json` file.
 2. **Curate** – Load the tape in the Bondtrace player. Add captions, hide setup steps, and export a `story.json`.
 3. **Demo** – Play the story to walk through your API.
 
@@ -63,7 +63,9 @@ if (token) {
 
 If the collection runs successfully in Postman, it should work with Bondtrace.
 
----
+#### Export the collection and environment
+
+Export both the collection and environment as JSON. In postman, on the left select Collections/Environments -> hover over the one you want to use -> click the three dots -> Export
 
 ### Step 2: Run the recorder
 

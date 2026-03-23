@@ -1,0 +1,727 @@
+openapi: 3.0.1
+info:
+  title: Bondsmith Savings Exchange Simulator APIs
+  description: Simulator APIs for testing purposes
+  contact:
+    name: API Support
+    url: https://bondsmith.co.uk/support
+    email: support@bondsmith.co.uk
+  version: "0.1"
+externalDocs:
+  url: https://bondsmith.stoplight.io/docs/savings
+servers:
+- url: https://simulator-api.sandbox.b7h.io
+  description: sandbox
+security:
+- OAuth2:
+  - public-api/default
+tags:
+- name: Simulator
+paths:
+  /health/check:
+    get:
+      tags:
+      - Simulator API Health
+      summary: Check the health of the simulator API (authentication required)
+      description: This operation checks the health of the simulator API.
+      operationId: CheckAuthHealth
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/customer/{customerUid}/kyc/check:
+    post:
+      tags:
+      - Customer
+      summary: Update customer KYC status
+      description: This operation updates a customer's KYC status.
+      operationId: UpdateCustomerKycChecks
+      parameters:
+      - name: customerUid
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the customer
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlatformCustomerVerificationStatusRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/customer/{customerUid}/kyc/documents/person/:
+    post:
+      tags:
+      - Customer
+      summary: Request customer KYC documents
+      description: This operation sends a webhook to request a customer's KYC documents.
+      operationId: RequestKycDocuments
+      parameters:
+      - name: customerUid
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the customer
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulatorKycDocumentInformationRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/instruction/product-account/{productAccountUid}/deposit/break:
+    post:
+      tags:
+      - Instruction
+      summary: Break a term or notice deposit
+      description: |2
+          This operation allows retrieving funds from a term/notice product bypassing the term/notice periods.
+          It also assumes no interest or fee will be returned.
+      operationId: BreakDeposit
+      parameters:
+      - name: productAccountUid
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the savings account
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositBreakRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/payment/customer/{customerUid}/accounts/{accountId}/transactions:
+    post:
+      tags:
+      - Payment
+      summary: Deposit funds into your savings account as a direct model customer
+      description: This operation deposits money into an individual customer's savings
+        account.
+      operationId: DirectCustomerDeposit
+      parameters:
+      - name: customerUid
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the customer
+          format: uuid
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the savings account
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDetailsRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/payment/customer/{customerUid}/transactions:
+    post:
+      tags:
+      - Payment
+      summary: Deposit funds into your holding account as an individual customer
+      description: This operation deposits money into an individual customer's cash
+        account.
+      operationId: IndividualDeposit
+      parameters:
+      - name: customerUid
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the customer
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDetailsRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/payment/platform/transactions:
+    post:
+      tags:
+      - Payment
+      summary: Deposit funds into your holding account as a pooled platform
+      description: "This operation deposits money into a pooled platform's virtual\
+        \ account. For optimal accelerated order processing performance, the amount\
+        \ sent should match the total in a single Order Response file."
+      operationId: PooledDeposit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDetailsRequest'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/platform-config/platform/accelerate-orders/{enabled}:
+    post:
+      tags:
+      - Platform
+      summary: Toggle accelerated order processing
+      description: |2
+          This operation shortens the order processing timeframe. Under typical operating conditions, a funded order gets processed over the course of a business day. When accelerated processing is enabled, the order will get processed in under an hour.
+      operationId: ToggleOrderFastForwarding
+      parameters:
+      - name: enabled
+        in: path
+        required: true
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /simulator/platform-config/sandbox/purge:
+    post:
+      tags:
+      - Platform
+      summary: "Purges all sandbox data for a platform, but keeps products"
+      description: This operation will purge all sandbox data for your platform except
+        for products.
+      operationId: purgeSandbox
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AbstractResource_JsonError_:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/OptionalMultiValues_Link_'
+        _embedded:
+          $ref: '#/components/schemas/OptionalMultiValues_Resource_'
+    Charset:
+      type: object
+      properties:
+        registered:
+          type: boolean
+    CurrencyCode:
+      type: string
+      description: ISO 4217 currency code
+      enum:
+      - GBP
+      - EUR
+      - USD
+    DepositBreakRequest:
+      required:
+      - bankPaymentReference
+      - bondsmithFeeAmounts
+      - customerAmounts
+      - depositBreakType
+      - platformFeeAmounts
+      - totalAmountReceived
+      type: object
+      properties:
+        totalAmountReceived:
+          minimum: 0.01
+          type: number
+          description: The amount returned from the bank prior to submitting the deposit
+            break request
+          format: float
+        customerAmounts:
+          minimum: 0.01
+          type: number
+          description: The amount that should be returned to the customer
+          format: float
+        platformFeeAmounts:
+          minimum: 0
+          type: number
+          description: The amount that should be returned to the platform
+          format: float
+        bondsmithFeeAmounts:
+          minimum: 0
+          type: number
+          description: The amount that should be returned to the operational account
+          format: float
+        depositBreakType:
+          allOf:
+          - $ref: '#/components/schemas/DepositBreakType'
+          - description: The reason for the customer to break their deposit
+        bankPaymentReference:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: Reference of payment made from the bank
+    DepositBreakType:
+      type: string
+      description: The reason for the customer to break their deposit
+      enum:
+      - DEATH
+      - FINANCIAL_HARDSHIP
+      - OTHER
+    ErrorDetail:
+      required:
+      - description
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        description:
+          type: string
+    ErrorResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/JsonError'
+      - $ref: '#/components/schemas/AbstractResource_JsonError_'
+      - required:
+        - status
+        properties:
+          status:
+            $ref: '#/components/schemas/HttpStatus'
+          errorDetails:
+            type: array
+            items:
+              $ref: '#/components/schemas/ErrorDetail'
+    HttpStatus:
+      type: string
+      enum:
+      - CONTINUE
+      - SWITCHING_PROTOCOLS
+      - PROCESSING
+      - OK
+      - CREATED
+      - ACCEPTED
+      - NON_AUTHORITATIVE_INFORMATION
+      - NO_CONTENT
+      - RESET_CONTENT
+      - PARTIAL_CONTENT
+      - MULTI_STATUS
+      - ALREADY_IMPORTED
+      - IM_USED
+      - MULTIPLE_CHOICES
+      - MOVED_PERMANENTLY
+      - FOUND
+      - SEE_OTHER
+      - NOT_MODIFIED
+      - USE_PROXY
+      - SWITCH_PROXY
+      - TEMPORARY_REDIRECT
+      - PERMANENT_REDIRECT
+      - BAD_REQUEST
+      - UNAUTHORIZED
+      - PAYMENT_REQUIRED
+      - FORBIDDEN
+      - NOT_FOUND
+      - METHOD_NOT_ALLOWED
+      - NOT_ACCEPTABLE
+      - PROXY_AUTHENTICATION_REQUIRED
+      - REQUEST_TIMEOUT
+      - CONFLICT
+      - GONE
+      - LENGTH_REQUIRED
+      - PRECONDITION_FAILED
+      - REQUEST_ENTITY_TOO_LARGE
+      - REQUEST_URI_TOO_LONG
+      - UNSUPPORTED_MEDIA_TYPE
+      - REQUESTED_RANGE_NOT_SATISFIABLE
+      - EXPECTATION_FAILED
+      - I_AM_A_TEAPOT
+      - ENHANCE_YOUR_CALM
+      - UNPROCESSABLE_ENTITY
+      - LOCKED
+      - FAILED_DEPENDENCY
+      - UNORDERED_COLLECTION
+      - TOO_EARLY
+      - UPGRADE_REQUIRED
+      - PRECONDITION_REQUIRED
+      - TOO_MANY_REQUESTS
+      - REQUEST_HEADER_FIELDS_TOO_LARGE
+      - NO_RESPONSE
+      - BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS
+      - UNAVAILABLE_FOR_LEGAL_REASONS
+      - REQUEST_HEADER_TOO_LARGE
+      - INTERNAL_SERVER_ERROR
+      - NOT_IMPLEMENTED
+      - BAD_GATEWAY
+      - SERVICE_UNAVAILABLE
+      - GATEWAY_TIMEOUT
+      - HTTP_VERSION_NOT_SUPPORTED
+      - VARIANT_ALSO_NEGOTIATES
+      - INSUFFICIENT_STORAGE
+      - LOOP_DETECTED
+      - BANDWIDTH_LIMIT_EXCEEDED
+      - NOT_EXTENDED
+      - NETWORK_AUTHENTICATION_REQUIRED
+      - CONNECTION_TIMED_OUT
+    InternalAccountTaxWrapperType:
+      type: string
+      description: Tax wrapper type
+      enum:
+      - DEFAULT
+      - ISA
+    InternalCustomerStatus:
+      type: string
+      enum:
+      - PENDING
+      - ACTIVATED
+      - DEACTIVATED
+      - CANCELLED
+      - CLOSED
+    JsonError:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractResource_JsonError_'
+      - required:
+        - message
+        properties:
+          message:
+            type: string
+          logref:
+            type: string
+            nullable: true
+          path:
+            type: string
+            nullable: true
+    MediaType:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        subtype:
+          type: string
+        extension:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/OptionalValues_String_'
+        quality:
+          type: string
+        qualityAsNumber:
+          type: number
+        version:
+          type: string
+        charset:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/Charset'
+        textBased:
+          type: boolean
+    OptionalMultiValues_Link_:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/OptionalValues_List_Link__'
+    OptionalMultiValues_Resource_:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/OptionalValues_List_Resource__'
+    OptionalValues_List_Link__:
+      type: object
+      properties:
+        empty:
+          type: boolean
+    OptionalValues_List_Resource__:
+      type: object
+      properties:
+        empty:
+          type: boolean
+    OptionalValues_String_:
+      type: object
+      properties:
+        empty:
+          type: boolean
+    SimulatorKycDocumentInformationRequest:
+      required:
+      - personExternalId
+      - personId
+      type: object
+      properties:
+        personExternalId:
+          minLength: 1
+          type: string
+          description: The person's external ID
+        personId:
+          type: string
+          description: The person's id
+          format: uuid
+    TransactionDetailsRequest:
+      required:
+      - amount
+      - reference
+      type: object
+      properties:
+        amount:
+          minimum: 0.01
+          type: number
+          description: The amount to be deposited to the virtual account
+          format: float
+        currency:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/CurrencyCode'
+          - description: The currency of the payment
+        reference:
+          maxLength: 128
+          minLength: 1
+          type: string
+          description: Your reference for this instruction. Accepts any valid string
+        taxWrapper:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/InternalAccountTaxWrapperType'
+          - description: Tax wrapper type
+    UpdatePlatformCustomerVerificationStatusRequest:
+      required:
+      - customerStatus
+      type: object
+      properties:
+        customerStatus:
+          allOf:
+          - $ref: '#/components/schemas/InternalCustomerStatus'
+          - description: The KYC status to be updated for the platform customer
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.sandbox.b7h.io/oauth2/token
+          refreshUrl: https://auth.sandbox.b7h.io/oauth2/token
+          scopes:
+            public-api/default: Default Scope

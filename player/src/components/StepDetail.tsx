@@ -95,7 +95,7 @@ export function StepDetail({
   const responseBodyStr =
     typeof tapeStep.response.body === 'string'
       ? tapeStep.response.body
-      : JSON.stringify(tapeStep.response.body, null, 2);
+      : JSON.stringify(tapeStep.response.body, null, 2) ?? '';
   const requestBody = tapeStep.request.body ?? '';
 
   const showPostContent = !isPre && !isSending;

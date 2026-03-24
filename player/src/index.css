@@ -205,23 +205,42 @@ textarea::placeholder {
   }
 }
 
-/* JSON code block – enhanced syntax highlighting (oneDark-inspired) */
-.json-code-block .token.property {
+/* JSON code block – dark mode syntax highlighting (oneDark-inspired) */
+[data-theme='dark'] .json-code-block .token.property {
   color: #9cdcfe !important;
 }
-.json-code-block .token.string {
+[data-theme='dark'] .json-code-block .token.string {
   color: #ce9178 !important;
 }
-.json-code-block .token.number {
+[data-theme='dark'] .json-code-block .token.number {
   color: #b5cea8 !important;
 }
-.json-code-block .token.boolean,
-.json-code-block .token.null {
+[data-theme='dark'] .json-code-block .token.boolean,
+[data-theme='dark'] .json-code-block .token.null {
   color: #569cd6 !important;
 }
-.json-code-block .token.punctuation,
-.json-code-block .token.operator {
+[data-theme='dark'] .json-code-block .token.punctuation,
+[data-theme='dark'] .json-code-block .token.operator {
   color: #d4d4d4 !important;
+}
+
+/* JSON code block – light mode syntax highlighting (high contrast) */
+[data-theme='light'] .json-code-block .token.property {
+  color: #005cc5 !important;
+}
+[data-theme='light'] .json-code-block .token.string {
+  color: #22863a !important;
+}
+[data-theme='light'] .json-code-block .token.number {
+  color: #e36209 !important;
+}
+[data-theme='light'] .json-code-block .token.boolean,
+[data-theme='light'] .json-code-block .token.null {
+  color: #d73a49 !important;
+}
+[data-theme='light'] .json-code-block .token.punctuation,
+[data-theme='light'] .json-code-block .token.operator {
+  color: #24292e !important;
 }
 
 /* Global scrollbar theme */

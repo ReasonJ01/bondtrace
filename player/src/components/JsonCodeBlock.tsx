@@ -1,11 +1,13 @@
+import type { CSSProperties } from 'react';
 import { Highlight, themes } from 'prism-react-renderer';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-json';
+import { useTheme } from '../context/ThemeContext';
 
 interface JsonCodeBlockProps {
   content: string;
   language?: 'json' | 'plain';
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }
 
 function tryPrettyJson(raw: string): string {
@@ -19,6 +21,7 @@ function tryPrettyJson(raw: string): string {
 }
 
 export function JsonCodeBlock({ content, language = 'json', style }: JsonCodeBlockProps) {
+  const { theme } = useTheme();
   const displayContent = language === 'json' ? tryPrettyJson(content) : content;
   const lang = language === 'json' ? 'json' : 'plaintext';
 
@@ -26,7 +29,7 @@ export function JsonCodeBlock({ content, language = 'json', style }: JsonCodeBlo
     <div className="json-code-block">
       <Highlight
         prism={Prism}
-        theme={themes.oneDark}
+        theme={theme === 'light' ? themes.github : themes.oneDark}
         code={displayContent || '(empty)'}
         language={lang}
       >
@@ -43,7 +46,7 @@ export function JsonCodeBlock({ content, language = 'json', style }: JsonCodeBlo
               maxHeight: 400,
               borderRadius: 6,
               border: '1px solid var(--border)',
-              background: '#1e1e1e',
+              background: theme === 'light' ? '#f6f8fa' : '#1e1e1e',
               ...style,
             }}
           >

@@ -1,0 +1,29 @@
+@name get_customers
+@auth client_token
+GET http://127.0.0.1:8000/customers
+
+###
+
+@name create_customer
+@auth client_token
+@set customerUid={{response.body.uid}}
+POST http://127.0.0.1:8000/customers
+Content-Type: application/json
+
+{
+  "name": "{{$random_string}}",
+  "account_type": "personal",
+  "balance": 0
+}
+
+###
+
+@name get_customer
+@auth client_token
+GET http://127.0.0.1:8000/customers/{{customerUid}}
+
+###
+
+@name approve_customer
+@auth ops_token
+POST http://127.0.0.1:8000/ops/{{customerUid}}/approve
